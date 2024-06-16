@@ -55,6 +55,7 @@ public class MovieServiceTests {
 
 		Mockito.when(repository.searchByTitle(any(), (Pageable) any())).thenReturn(page);
 		Mockito.when(repository.findById(existingID)).thenReturn(Optional.of(movie));
+		Mockito.when(repository.findById(nonExistingID)).thenThrow(ResourceNotFoundException.class);
 	}
 
 	
@@ -79,6 +80,9 @@ public class MovieServiceTests {
 	
 	@Test
 	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+		Assertions.assertThrows(ResourceNotFoundException.class, ()->{
+			service.findById(nonExistingID);
+		});
 	}
 	
 	@Test
