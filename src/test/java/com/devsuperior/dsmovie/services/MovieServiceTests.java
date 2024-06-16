@@ -53,9 +53,18 @@ public class MovieServiceTests {
 		page = new PageImpl<>(List.of(movie));
 		pageable = PageRequest.of(0, 12);
 
+		// findAll
 		Mockito.when(repository.searchByTitle(any(), (Pageable) any())).thenReturn(page);
+
+		// FindById
 		Mockito.when(repository.findById(existingID)).thenReturn(Optional.of(movie));
 		Mockito.when(repository.findById(nonExistingID)).thenThrow(ResourceNotFoundException.class);
+
+		// Save
+		Mockito.when(repository.save(any())).thenReturn(movie);
+
+		// Update
+		Mockito.when(repository.getReferenceById(existingID)).thenReturn(movie);
 		Mockito.when(repository.save(any())).thenReturn(movie);
 	}
 
@@ -97,6 +106,11 @@ public class MovieServiceTests {
 	
 	@Test
 	public void updateShouldReturnMovieDTOWhenIdExists() {
+		MovieDTO result = service.update(existingID, movieDTO);
+
+		Assertions.assertNotNull(result);
+		Assertions.assertEquals(existingID, result.getId());
+		Assertions.assertEquals(title, result.getTitle());
 	}
 	
 	@Test
