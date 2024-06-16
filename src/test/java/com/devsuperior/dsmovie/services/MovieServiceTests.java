@@ -69,6 +69,9 @@ public class MovieServiceTests {
 		Mockito.when(repository.save(any())).thenReturn(movie);
 		Mockito.when(repository.getReferenceById(nonExistingID)).thenThrow(EntityNotFoundException.class);
 
+		// Delete
+		Mockito.when(repository.existsById(existingID)).thenReturn(true);
+
 	}
 
 	
@@ -125,6 +128,9 @@ public class MovieServiceTests {
 	
 	@Test
 	public void deleteShouldDoNothingWhenIdExists() {
+		Assertions.assertDoesNotThrow(() -> {
+			service.delete(existingID);
+		});
 	}
 	
 	@Test
