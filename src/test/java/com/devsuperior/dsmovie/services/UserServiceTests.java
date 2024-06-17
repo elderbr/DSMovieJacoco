@@ -69,7 +69,7 @@ public class UserServiceTests {
     @Test
     public void authenticatedShouldThrowUsernameNotFoundExceptionWhenUserDoesNotExists() {
         Mockito.doThrow(ClassCastException.class).when(userUtil).getLoggedUsername();
-        Assertions.assertThrows(UsernameNotFoundException.class, ()->{
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
             service.authenticated();
         });
     }
@@ -87,5 +87,8 @@ public class UserServiceTests {
 
     @Test
     public void loadUserByUsernameShouldThrowUsernameNotFoundExceptionWhenUserDoesNotExists() {
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            service.loadUserByUsername(nonExistingUsername);
+        });
     }
 }
