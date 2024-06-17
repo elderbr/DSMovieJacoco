@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -60,6 +61,10 @@ public class UserServiceTests {
 
     @Test
     public void authenticatedShouldThrowUsernameNotFoundExceptionWhenUserDoesNotExists() {
+        Mockito.doThrow(ClassCastException.class).when(userUtil).getLoggedUsername();
+        Assertions.assertThrows(UsernameNotFoundException.class, ()->{
+            service.authenticated();
+        });
     }
 
     @Test
