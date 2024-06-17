@@ -13,10 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +39,7 @@ public class UserServiceTests {
 
     private String existingUsername, nonExistingUsername;
     private UserEntity user;
+    private List<UserDetailsProjection> userDetails;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -47,6 +50,10 @@ public class UserServiceTests {
         user = UserFactory.createUserEntity();
         Mockito.when(repository.findByUsername(existingUsername)).thenReturn(Optional.of(user));
         Mockito.when(repository.findByUsername(nonExistingUsername)).thenReturn(Optional.empty());
+
+        userDetails = UserDetailsFactory.createCustomAdminUser(existingUsername);
+        Mockito.when(repository.searchUserAndRolesByUsername(existingUsername)).thenReturn(userDetails);
+        Mockito.when(repository.searchUserAndRolesByUsername(nonExistingUsername)).thenReturn(new ArrayList<>());
     }
 
     @Test
@@ -69,6 +76,13 @@ public class UserServiceTests {
 
     @Test
     public void loadUserByUsernameShouldReturnUserDetailsWhenUserExists() {
+        UserService spyUserService = Mockito.spy(service);
+        Mockito.doReturn(user).when(spyUserService).authenticated();
+
+        UserDetails result = spyUserService.loadUserByUsername(existingUsername);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(existingUsername, result.getUsername());
     }
 
     @Test
