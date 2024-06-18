@@ -82,8 +82,9 @@ public class ScoreServiceTests {
 
     @Test
     public void saveScoreShouldThrowResourceNotFoundExceptionWhenNonExistingMovieId() {
+        scoreDTO = new ScoreDTO(nonExistingMoviID, 2.0);
         Assertions.assertThrows(ResourceNotFoundException.class, ()->{
-            Mockito.when(movieRepository.findById(nonExistingMoviID));
+            scoreService.saveScore(scoreDTO); // Chame aqui o método que deveria lançar a exceção
         });
     }
 }
