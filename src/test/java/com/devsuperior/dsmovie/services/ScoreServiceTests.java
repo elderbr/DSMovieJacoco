@@ -21,9 +21,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -80,7 +78,6 @@ public class ScoreServiceTests {
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1L, result.getId());
-        //Assertions.assertEquals(ScoreFactory.scoreValue, result.getScore());
     }
 
     @Test

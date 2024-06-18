@@ -1,5 +1,6 @@
 package com.devsuperior.dsmovie.services;
 
+import com.devsuperior.dsmovie.utils.CustomScoreSum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,9 @@ public class ScoreService {
 	
 	@Autowired
 	private ScoreRepository scoreRepository;
+
+	@Autowired
+	private CustomScoreSum scoreSum;
 	
 	@Transactional
 	public MovieDTO saveScore(ScoreDTO dto) {
@@ -39,13 +43,8 @@ public class ScoreService {
 		score.setValue(dto.getScore());
 		
 		score = scoreRepository.saveAndFlush(score);
-		
-		double sum = 0.0;
-		for (ScoreEntity s : movie.getScores()) {
-			sum = sum + s.getValue();
-		}
 			
-		double avg = sum / movie.getScores().size();
+		double avg = scoreSum.getScoreSum(movie);
 		
 		movie.setScore(avg);
 		movie.setCount(movie.getScores().size());
